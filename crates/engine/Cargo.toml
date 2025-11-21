@@ -1,0 +1,10 @@
+[package]
+name = "shadowjs-engine"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+shadowjs-parser = { path = "../parser" }
+shadowjs-bytecode = { path = "../bytecode" }
+shadowjs-vm = { path = "../vm" }
+shadowjs-jsruntime = { path = "../jsruntime" }

@@ -1,0 +1,15 @@
+[workspace]
+members = [
+    "crates/lexer",
+    "crates/parser",
+    "crates/ast",
+    "crates/bytecode",
+    "crates/vm",
+    "crates/gc",
+    "crates/jsruntime",
+    "crates/bindings",
+    "crates/engine",
+    "crates/cli",
+]
+
+resolver = "2"

@@ -1,0 +1,8 @@
+[package]
+name = "shadowjs-bytecode"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+shadowjs-ast = { path = "../ast" }
+serde = { version = "1", features = ["derive"] }

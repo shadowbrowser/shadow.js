@@ -1,0 +1,8 @@
+[package]
+name = "shadowjs-jsruntime"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+shadowjs-vm = { path = "../vm" }
+shadowjs-gc = { path = "../gc" }
