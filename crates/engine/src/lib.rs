@@ -11,6 +11,10 @@ impl ShadowEngine {
         Self { vm: VM::new() }
     }
 
+    pub fn set_debug(&mut self, debug: bool) {
+        self.vm.set_debug(debug);
+    }
+
     pub fn eval(&mut self, src: &str) -> Result<(), String> {
         let ast = Parser::new(src).parse()?;
         let bytecode = BytecodeCompiler::compile(&ast)?;
