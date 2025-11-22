@@ -9,12 +9,12 @@ pub enum TokenType {
     Else,
     While,
     For,
-    
+
     // Identifiers and Literals
     Identifier(String),
     Number(f64),
     String(String),
-    
+
     // Operators
     Plus,
     Minus,
@@ -25,7 +25,7 @@ pub enum TokenType {
     NotEqual,
     LessThan,
     GreaterThan,
-    
+
     // Punctuation
     LParen,
     RParen,
@@ -37,7 +37,7 @@ pub enum TokenType {
     SemiColon,
     Comma,
     Dot,
-    
+
     EOF,
     Illegal,
 }

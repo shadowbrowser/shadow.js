@@ -17,6 +17,23 @@ shadow.js currently supports a subset of JavaScript:
 *   **Comments**: Single-line (`//`) and Multi-line (`/* ... */`)
 *   **Garbage Collection**: Basic reference counting (Rc) for complex types
 
+## Architecture
+
+ShadowJS is built as a modular system composed of several crates:
+
+*   **`shadowjs-ast`**: Defines the Abstract Syntax Tree (AST) nodes.
+*   **`shadowjs-bindings`**: Provides bindings for embedding and native functions.
+*   **`shadowjs-bytecode`**: Defines bytecode instructions and the compiler (AST -> Bytecode).
+*   **`shadowjs-cli`**: The command-line interface.
+*   **`shadowjs-engine`**: High-level API tying the components together.
+*   **`shadowjs-gc`**: Garbage collection implementation.
+*   **`shadowjs-jit`**: Experimental JIT compiler emitting x64 machine code.
+*   **`shadowjs-jsruntime`**: Runtime environment and standard library.
+*   **`shadowjs-lexer`**: Lexical analyzer (Source -> Tokens).
+*   **`shadowjs-parser`**: Parser (Tokens -> AST).
+*   **`shadowjs-value`**: JavaScript value representation.
+*   **`shadowjs-vm`**: Virtual Machine for executing bytecode.
+
 ## Installation
 
 You can include `shadowjs` in your Rust project by adding it to your `Cargo.toml`.

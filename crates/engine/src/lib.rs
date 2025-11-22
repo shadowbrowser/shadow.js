@@ -1,5 +1,5 @@
-use shadowjs_parser::Parser;
 use shadowjs_bytecode::BytecodeCompiler;
+use shadowjs_parser::Parser;
 use shadowjs_vm::VM;
 
 pub struct ShadowEngine {

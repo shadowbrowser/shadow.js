@@ -1,15 +1,46 @@
 use crate::opcode::OpCode;
+use shadowjs_gc::trace::Trace;
+use std::rc::Rc;
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct FunctionTemplate {
+    pub name: Rc<String>,
+    pub arity: usize,
+    pub chunk: Chunk,
+}
+
+impl Trace for FunctionTemplate {
+    fn trace(&self, visited: &mut std::collections::HashSet<usize>) {
+        self.chunk.trace(visited);
+    }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Constant {
     Number(f64),
-    String(String),
+    String(Rc<String>),
+    Function(Rc<FunctionTemplate>),
+}
+
+impl Trace for Constant {
+    fn trace(&self, visited: &mut std::collections::HashSet<usize>) {
+        match self {
+            Constant::Function(f) => f.trace(visited),
+            _ => {}
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Chunk {
     pub code: Vec<OpCode>,
     pub constants: Vec<Constant>,
+}
+
+impl Trace for Chunk {
+    fn trace(&self, visited: &mut std::collections::HashSet<usize>) {
+        self.constants.trace(visited);
+    }
 }
 
 impl Chunk {

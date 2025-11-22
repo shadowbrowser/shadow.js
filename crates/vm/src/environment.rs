@@ -1,5 +1,5 @@
+use shadowjs_value::Value;
 use std::collections::HashMap;
-use crate::value::Value;
 
 #[derive(Debug, Clone)]
 pub struct Environment {

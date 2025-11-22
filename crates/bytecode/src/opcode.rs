@@ -17,7 +17,9 @@ pub enum OpCode {
     Object(usize),    // Number of pairs
     GetIndex,
     SetIndex,
-    Jump(usize),      // Relative jump
+    Jump(usize),        // Relative jump
     JumpIfFalse(usize), // Relative jump if false
     Return,
+    Undefined,
+    Null,
 }

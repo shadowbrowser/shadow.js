@@ -1,0 +1,16 @@
+[package]
+name = "shadowjs_jit"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+shadowjs-bytecode = { path = "../bytecode" }
+shadowjs-gc = { path = "../gc" }
+shadowjs_value = { path = "../value" }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.52", features = ["Win32_System_Memory", "Win32_Foundation"] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+

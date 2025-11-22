@@ -1,8 +1,8 @@
-pub mod opcode;
 pub mod chunk;
 pub mod compiler;
+pub mod opcode;
 
-pub use opcode::OpCode;
 pub use chunk::Chunk;
 pub use chunk::Constant;
 pub use compiler::BytecodeCompiler;
+pub use opcode::OpCode;

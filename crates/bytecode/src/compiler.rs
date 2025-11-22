@@ -1,6 +1,7 @@
+use crate::chunk::{Chunk, Constant, FunctionTemplate};
 use crate::opcode::OpCode;
-use crate::chunk::{Chunk, Constant};
-use shadowjs_ast::{Program, Statement, Expression};
+use shadowjs_ast::{Expression, Program, Statement};
+use std::rc::Rc;
 
 pub struct BytecodeCompiler {
     chunk: Chunk,
@@ -29,7 +30,9 @@ impl BytecodeCompiler {
             }
             Statement::Let { name, value } | Statement::Const { name, value } => {
                 self.compile_expression(value)?;
-                let idx = self.chunk.add_constant(Constant::String(name.clone()));
+                let idx = self
+                    .chunk
+                    .add_constant(Constant::String(Rc::new(name.clone())));
                 self.emit(OpCode::SetGlobal(idx));
                 self.emit(OpCode::Pop);
             }
@@ -38,24 +41,59 @@ impl BytecodeCompiler {
                     self.compile_statement(stmt)?;
                 }
             }
-            Statement::If { condition, consequence, alternative } => {
+            Statement::If {
+                condition,
+                consequence,
+                alternative,
+            } => {
                 self.compile_expression(condition)?;
-                
+
                 let jump_if_false_idx = self.emit_jump(OpCode::JumpIfFalse(0));
-                
+
                 self.compile_statement(consequence)?;
-                
+
                 let jump_idx = self.emit_jump(OpCode::Jump(0));
-                
+
                 self.patch_jump(jump_if_false_idx);
-                
+
                 if let Some(alt) = alternative {
                     self.compile_statement(alt)?;
                 }
-                
+
                 self.patch_jump(jump_idx);
             }
-            _ => return Err("Statement not supported yet".to_string()),
+            Statement::Return(expr) => {
+                if let Some(e) = expr {
+                    self.compile_expression(e)?;
+                } else {
+                    self.emit(OpCode::Undefined);
+                }
+                self.emit(OpCode::Return);
+            }
+            Statement::Function { name, params, body } => {
+                let mut compiler = BytecodeCompiler::new();
+                compiler.compile_statement(body)?;
+                // Ensure return
+                compiler.emit(OpCode::Undefined);
+                compiler.emit(OpCode::Return);
+
+                let template = FunctionTemplate {
+                    name: Rc::new(name.clone()),
+                    arity: params.len(),
+                    chunk: compiler.chunk,
+                };
+
+                let idx = self
+                    .chunk
+                    .add_constant(Constant::Function(Rc::new(template)));
+                self.emit(OpCode::Constant(idx));
+
+                let name_idx = self
+                    .chunk
+                    .add_constant(Constant::String(Rc::new(name.clone())));
+                self.emit(OpCode::SetGlobal(name_idx));
+                self.emit(OpCode::Pop);
+            }
         }
         Ok(())
     }
@@ -67,14 +105,21 @@ impl BytecodeCompiler {
                 self.emit(OpCode::Constant(idx));
             }
             Expression::String(val) => {
-                let idx = self.chunk.add_constant(Constant::String(val.clone()));
+                let idx = self
+                    .chunk
+                    .add_constant(Constant::String(Rc::new(val.clone())));
                 self.emit(OpCode::Constant(idx));
             }
             Expression::Identifier(name) => {
-                let idx = self.chunk.add_constant(Constant::String(name.clone()));
+                let idx = self
+                    .chunk
+                    .add_constant(Constant::String(Rc::new(name.clone())));
                 self.emit(OpCode::GetGlobal(idx));
             }
-            Expression::Call { function, arguments } => {
+            Expression::Call {
+                function,
+                arguments,
+            } => {
                 self.compile_expression(function)?;
                 for arg in arguments {
                     self.compile_expression(arg)?;
@@ -89,7 +134,9 @@ impl BytecodeCompiler {
             }
             Expression::Object(pairs) => {
                 for (key, value) in pairs {
-                    let idx = self.chunk.add_constant(Constant::String(key.clone()));
+                    let idx = self
+                        .chunk
+                        .add_constant(Constant::String(Rc::new(key.clone())));
                     self.emit(OpCode::Constant(idx));
                     self.compile_expression(value)?;
                 }
@@ -100,7 +147,11 @@ impl BytecodeCompiler {
                 self.compile_expression(index)?;
                 self.emit(OpCode::GetIndex);
             }
-            Expression::Infix { left, operator, right } => {
+            Expression::Infix {
+                left,
+                operator,
+                right,
+            } => {
                 self.compile_expression(left)?;
                 self.compile_expression(right)?;
                 match operator.as_str() {

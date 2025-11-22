@@ -1,7 +1,13 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Statement {
-    Let { name: String, value: Expression },
-    Const { name: String, value: Expression },
+    Let {
+        name: String,
+        value: Expression,
+    },
+    Const {
+        name: String,
+        value: Expression,
+    },
     Return(Option<Expression>),
     Expression(Expression),
     Block(Vec<Statement>),

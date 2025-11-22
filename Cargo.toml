@@ -10,6 +10,8 @@ members = [
     "crates/bindings",
     "crates/engine",
     "crates/cli",
+    "crates/jit",
+    "crates/value",
 ]
 
 resolver = "2"

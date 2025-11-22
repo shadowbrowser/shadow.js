@@ -1,14 +1,10 @@
 [package]
-name = "shadowjs-vm"
+name = "shadowjs_value"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+rustc-hash = "2.1.1"
 shadowjs-bytecode = { path = "../bytecode" }
 shadowjs-gc = { path = "../gc" }
-shadowjs_value = { path = "../value" }
-shadowjs_jit = { path = "../jit" }
-rustc-hash = "2.1.1"
-
-
 
